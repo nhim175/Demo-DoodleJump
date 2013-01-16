@@ -1,0 +1,69 @@
+<html>
+<head>
+    <style type="text/css">
+        canvas {
+            border: 1px solid #CCC;
+        }
+        .container {
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript" src="js/easeljs-0.5.0.min.js"></script>
+    <script type="text/javascript">
+        var canvas;
+        var stage;
+        var img;
+        var character;
+        var height = 13*13; //độ cao của jump = số chính phương
+        var i;           //hoành độ
+
+        function init() {
+            canvas = document.getElementById("canvas");
+            stage = new createjs.Stage(canvas);
+            img = new Image();
+            img.src = "img/character-small.png";
+            img.onload = createCharacter;
+
+            i = -Math.sqrt(height);
+
+            createjs.Ticker.setFPS(60);
+            createjs.Ticker.addListener(window);
+        }
+
+        function createCharacter(event) {
+            character = new createjs.Bitmap(img);
+            character.regX = character.image.width*0.5;
+            character.regY = character.image.height*0.5;
+            character.x = canvas.width/2;
+            character.y = canvas.height - character.image.height*0.5;
+            bottomjump = canvas.height - character.image.height*0.5;
+            stage.addChild(character);
+            stage.update();
+        }
+
+        function tick() {
+            character.x += (stage.mouseX - character.x)*0.1;  //character.x nhảy theo chuột
+            jump();
+
+            stage.update();
+        }
+
+        function jump() {
+            i += .5;     //đặt tốc độ nhảy ở đây
+
+            character.y = canvas.height - character.image.height*0.5 - (height - i*i);
+
+            if (i == Math.sqrt(height)) {
+                i = -Math.sqrt(height);
+            }
+        }
+
+    </script>
+</head>
+<body onload="init()">
+<div class="container">
+    <canvas id="canvas" width="320" height="480"></canvas>
+</div>
+
+</body>
+</html>
